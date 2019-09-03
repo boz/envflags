@@ -48,7 +48,9 @@ func (ef *envflags) ApplyWith(env []string, flags *pflag.FlagSet) error {
 		}
 
 		if val, ok := envm[name]; ok {
-			err = flag.Value.Set(val)
+			if err = flag.Value.Set(val); err == nil {
+				flag.Changed = true
+			}
 		}
 	})
 
@@ -58,7 +60,7 @@ func (ef *envflags) ApplyWith(env []string, flags *pflag.FlagSet) error {
 func parseEnv(env []string) map[string]string {
 	envm := make(map[string]string, len(env))
 	for _, entry := range env {
-		parts := strings.Split(entry, "=")
+		parts := strings.SplitN(entry, "=", 2)
 		if len(parts) != 2 {
 			continue
 		}
