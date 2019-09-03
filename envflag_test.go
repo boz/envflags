@@ -60,3 +60,20 @@ func Test_InvalidEnv(t *testing.T) {
 
 	assert.False(t, flags.Changed("bar"))
 }
+
+func Test_parseEnv(t *testing.T) {
+	env := []string{
+		"FOO=foo",
+		"BAR=bar=bar",
+		"BAZ=",
+		"ZAB",
+	}
+
+	envm := parseEnv(env)
+
+	assert.Equal(t, map[string]string{
+		"FOO": "foo",
+		"BAR": "bar=bar",
+		"BAZ": "",
+	}, envm)
+}
